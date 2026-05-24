@@ -154,6 +154,7 @@ def do_build(bench_ids, suite, config_tag, args):
     env["COPT"] = args.opt
     env["CXXOPT"] = args.opt
     env["FOPT"] = args.opt
+    env["XLIBS"] = " ".join(filter(lambda s: s.startswith("-l"), args.opt.split()))
 
     gen = subprocess.run(
         ["perl", GEN_PL] + bench_ids, env=env, capture_output=True, text=True
