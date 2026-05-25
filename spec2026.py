@@ -83,6 +83,9 @@ def resolve_benches(args):
     elif args.suite:
         benches = parse_bset(args.suite)
     else:
+        print(
+            "Error: specify a suite (e.g. intrate) or --bench <name>", file=sys.stderr
+        )
         return None, None
     bench_dirs = []
     for b in benches:
