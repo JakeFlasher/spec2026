@@ -1507,9 +1507,9 @@ def cmd_run(args):
                 okstr = "OK" if wl_ok else "FAIL"
                 print(f"  wl={wl_idx}: {okstr} ({elapsed:.2f}s)", flush=True)
                 if args.perf_record:
-                    print(f"    perf-record: {perf_name}.data", flush=True)
+                    print(f"    perf-record: {os.path.join(run_dir, perf_name)}.data", flush=True)
                 if args.perf_stat is not None:
-                    print(f"    perf-stat: {perf_name}.stat", flush=True)
+                    print(f"    perf-stat: {os.path.join(run_dir, perf_name)}.stat", flush=True)
                 if not wl_ok:
                     all_ok = False
                     print(
