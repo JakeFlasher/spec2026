@@ -285,6 +285,7 @@ def add_run_args(p):
     p.add_argument("--cc", default="gcc", help="C compiler (used for config tag)")
     p.add_argument("--opt", default="-O3", help="Opt flags (used for config tag)")
     p.add_argument("--perf-record", action="store_true", help="Wrap with perf record")
+    p.add_argument("--perf-stat", action="store_true", help="Wrap with perf stat")
 
 
 # Per-benchmark workload definitions
@@ -1474,6 +1475,8 @@ def cmd_run(args):
                 perf_name = f"perf-{bid}-wl{wl_idx}"
                 if args.perf_record:
                     cmd = ["perf", "record", "-o", f"{perf_name}.data"] + cmd
+                if args.perf_stat:
+                    cmd = ["perf", "stat", "-o", f"{perf_name}.stat"] + cmd
                 cmd = prefix + cmd
                 start = time.monotonic()
                 result = subprocess.run(cmd, cwd=run_dir, capture_output=True)
