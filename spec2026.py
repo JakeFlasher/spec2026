@@ -284,8 +284,18 @@ def add_run_args(p):
     )
     p.add_argument("--cc", default="gcc", help="C compiler (used for config tag)")
     p.add_argument("--opt", default="-O3", help="Opt flags (used for config tag)")
-    p.add_argument("--perf-record", action="store_true", help="Wrap with perf record")
-    p.add_argument("--perf-stat", action="store_true", help="Wrap with perf stat")
+    perf = p.add_mutually_exclusive_group()
+    perf.add_argument(
+        "--perf-record", action="store_true", help="Wrap with perf record"
+    )
+    perf.add_argument(
+        "--perf-stat",
+        nargs="?",
+        const="",
+        default=None,
+        metavar="events",
+        help="Wrap with perf stat (optionally with -e events)",
+    )
 
 
 # Per-benchmark workload definitions
@@ -1475,8 +1485,11 @@ def cmd_run(args):
                 perf_name = f"perf-{bid}-wl{wl_idx}"
                 if args.perf_record:
                     cmd = ["perf", "record", "-o", f"{perf_name}.data"] + cmd
-                if args.perf_stat:
-                    cmd = ["perf", "stat", "-o", f"{perf_name}.stat"] + cmd
+                if args.perf_stat is not None:
+                    perf_cmd = ["perf", "stat", "-o", f"{perf_name}.stat"]
+                    if args.perf_stat:
+                        perf_cmd += ["-e", args.perf_stat]
+                    cmd = perf_cmd + cmd
                 cmd = prefix + cmd
                 start = time.monotonic()
                 result = subprocess.run(cmd, cwd=run_dir, capture_output=True)
@@ -1493,6 +1506,10 @@ def cmd_run(args):
                 wl_ok = result.returncode == 0
                 okstr = "OK" if wl_ok else "FAIL"
                 print(f"  wl={wl_idx}: {okstr} ({elapsed:.2f}s)", flush=True)
+                if args.perf_record:
+                    print(f"    perf-record: {perf_name}.data", flush=True)
+                if args.perf_stat is not None:
+                    print(f"    perf-stat: {perf_name}.stat", flush=True)
                 if not wl_ok:
                     all_ok = False
                     print(
