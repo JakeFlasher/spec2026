@@ -286,7 +286,12 @@ def add_run_args(p):
     p.add_argument("--opt", default="-O3", help="Opt flags (used for config tag)")
     perf = p.add_mutually_exclusive_group()
     perf.add_argument(
-        "--perf-record", action="store_true", help="Wrap with perf record"
+        "--perf-record",
+        nargs="?",
+        const="",
+        default=None,
+        metavar="events",
+        help="Wrap with perf record (optionally with -e events)",
     )
     perf.add_argument(
         "--perf-stat",
@@ -1483,8 +1488,11 @@ def cmd_run(args):
                     shutil.copy2(exe_path, exe_dst)
                 cmd = [f"./{exe_name}"] + wl.args
                 perf_name = f"perf-{bid}-wl{wl_idx}"
-                if args.perf_record:
-                    cmd = ["perf", "record", "-o", f"{perf_name}.data"] + cmd
+                if args.perf_record is not None:
+                    perf_cmd = ["perf", "record", "-o", f"{perf_name}.data"]
+                    if args.perf_record:
+                        perf_cmd += ["-e", args.perf_record]
+                    cmd = perf_cmd + cmd
                 if args.perf_stat is not None:
                     perf_cmd = ["perf", "stat", "-o", f"{perf_name}.stat"]
                     if args.perf_stat:
@@ -1506,10 +1514,16 @@ def cmd_run(args):
                 wl_ok = result.returncode == 0
                 okstr = "OK" if wl_ok else "FAIL"
                 print(f"  wl={wl_idx}: {okstr} ({elapsed:.2f}s)", flush=True)
-                if args.perf_record:
-                    print(f"    perf-record: {os.path.join(run_dir, perf_name)}.data", flush=True)
+                if args.perf_record is not None:
+                    print(
+                        f"    perf-record: {os.path.join(run_dir, perf_name)}.data",
+                        flush=True,
+                    )
                 if args.perf_stat is not None:
-                    print(f"    perf-stat: {os.path.join(run_dir, perf_name)}.stat", flush=True)
+                    print(
+                        f"    perf-stat: {os.path.join(run_dir, perf_name)}.stat",
+                        flush=True,
+                    )
                 if not wl_ok:
                     all_ok = False
                     print(
