@@ -284,8 +284,7 @@ def add_run_args(p):
     )
     p.add_argument("--cc", default="gcc", help="C compiler (used for config tag)")
     p.add_argument("--opt", default="-O3", help="Opt flags (used for config tag)")
-    perf = p.add_mutually_exclusive_group()
-    perf.add_argument(
+    p.add_argument(
         "--perf-record",
         nargs="?",
         const="",
@@ -293,13 +292,19 @@ def add_run_args(p):
         metavar="events",
         help="Wrap with perf record (optionally with -e events)",
     )
-    perf.add_argument(
+    p.add_argument(
         "--perf-stat",
         nargs="?",
         const="",
         default=None,
         metavar="events",
         help="Wrap with perf stat (optionally with -e events)",
+    )
+    p.add_argument(
+        "--perf-stat-metrics",
+        default=None,
+        metavar="metrics",
+        help="Pass -M <metrics> to perf stat (e.g. TopdownL1); can be combined with --perf-stat",
     )
 
 
@@ -1355,6 +1360,14 @@ def cmd_run(args):
     bench_dirs, bench_ids = resolve_benches(args)
     if bench_dirs is None:
         return 1
+    if args.perf_record is not None and (
+        args.perf_stat is not None or args.perf_stat_metrics is not None
+    ):
+        print(
+            "Error: --perf-record is mutually exclusive with --perf-stat and --perf-stat-metrics",
+            file=sys.stderr,
+        )
+        return 1
     config_tag = args.config or make_config_tag(args)
     copies = max(args.copies, 1)
     size = args.input_size
@@ -1493,10 +1506,12 @@ def cmd_run(args):
                     if args.perf_record:
                         perf_cmd += ["-e", args.perf_record]
                     cmd = perf_cmd + cmd
-                if args.perf_stat is not None:
+                if args.perf_stat is not None or args.perf_stat_metrics is not None:
                     perf_cmd = ["perf", "stat", "-o", f"{perf_name}.stat"]
                     if args.perf_stat:
                         perf_cmd += ["-e", args.perf_stat]
+                    if args.perf_stat_metrics:
+                        perf_cmd += ["-M", args.perf_stat_metrics]
                     cmd = perf_cmd + cmd
                 cmd = prefix + cmd
                 start = time.monotonic()
