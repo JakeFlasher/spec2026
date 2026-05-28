@@ -1,3 +1,6 @@
 benchspec/
 build/
+bin/
 __pycache__
+*.tar.gz
+*.log

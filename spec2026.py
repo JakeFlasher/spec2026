@@ -1271,18 +1271,21 @@ def link_inputs(src_dir, dst_dir, copy=False, decompress_xz=False):
     for name in os.listdir(src_dir):
         src = os.path.join(src_dir, name)
         dst = os.path.join(dst_dir, name)
-        if os.path.exists(dst):
-            continue
         if name.endswith(".xz") and decompress_xz:
             dst = os.path.join(dst_dir, name[:-3])
-            if not os.path.exists(dst):
-                with lzma.open(src) as f_in, open(dst, "wb") as f_out:
-                    shutil.copyfileobj(f_in, f_out)
+            if os.path.exists(dst) or os.path.islink(dst):
+                os.unlink(dst)
+            with lzma.open(src) as f_in, open(dst, "wb") as f_out:
+                shutil.copyfileobj(f_in, f_out)
         elif copy and os.path.isdir(src):
+            if os.path.exists(dst) or os.path.islink(dst):
+                shutil.rmtree(dst)
             shutil.copytree(src, dst, symlinks=True)
         elif copy and os.path.isfile(src) and not os.path.islink(src):
             shutil.copy2(src, dst)
         else:
+            if os.path.exists(dst) or os.path.islink(dst):
+                os.unlink(dst)
             os.symlink(src, dst)
 
 
@@ -1291,9 +1294,7 @@ def setup_run_dir(
 ):
     run_tag = f"run_{size}_{config_tag}"
     run_dir = os.path.join(build_dir, "run", run_tag)
-    if os.path.isdir(run_dir):
-        shutil.rmtree(run_dir)
-    os.makedirs(run_dir)
+    os.makedirs(run_dir, exist_ok=True)
 
     link_inputs(
         os.path.join(bench_dir, "data", "all", "input"),
