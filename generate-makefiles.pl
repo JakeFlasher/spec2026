@@ -97,8 +97,6 @@ sub generate_makefiles {
     my $stripped = $content;
     $stripped =~ s/^sub\s+\w+.*?^}\n//gms;
     $stripped =~ s/^1;\s*$//m;
-    $stripped =~ s/^\%deps\s*=\s*\{.*?^\};//gms;
-    $stripped =~ s/^\%srcdeps\s*=\s*\{.*?^\};//gms;
     $stripped =~ s/^use\s+Config\s*;\s*$//m;
     $stripped =~ s/^use\s+Cwd\s*;\s*$//m;
 
@@ -112,6 +110,8 @@ sub generate_makefiles {
     @main::base_exe = ();
     %main::sources = ();
     %main::common_sources = ();
+    %main::deps = ();
+    %main::srcdeps = ();
 
     {
         my $ok = eval $stripped;
@@ -256,13 +256,48 @@ sub generate_makefiles {
         open(my $dfh, '>', "$exe_dir/Makefile.deps")
             or die "Cannot write $exe_dir/Makefile.deps: $!";
         print $dfh "# Auto-generated\n";
-        print $dfh "objects = @objs_for_exe\n";
+        print $dfh "\n";
+
+        # Generate Fortran USE dependency rules from %deps.
+        # Each rule ensures a target object file depends on its preprocessed
+        # source and on the object files of all modules it USEs.
+        my %deps = %main::deps;
+        if (%deps) {
+            for my $src (sort keys %deps) {
+                my @dlist = @{$deps{$src}};
+                next unless @dlist;
+                my ($tgt_name, $tgt_src) = fppized_info($src);
+                my @dep_names;
+                for my $dep (@dlist) {
+                    my ($dep_name) = fppized_info($dep);
+                    push @dep_names, $dep_name;
+                }
+                print $dfh "\$(addsuffix \$(OBJ),$tgt_name): $tgt_src \$(addsuffix \$(OBJ)," . (join ' ', @dep_names) . ")\n";
+            }
+        }
+
         print $dfh "\n";
         close($dfh);
 
         printf "  %-25s %-8s %s in %s/\n",
             "$benchnum.$benchname", "[$benchlang]", $exe,
             "$rel_out/$exe";
+    }
+}
+
+# Returns (fppized_basename, preprocessed_source) for a given source file.
+# For uppercase-F Fortran files (.F90/.F95/.F77/.F) that need preprocessing:
+#   ("basename.fppized", "basename.fppized.f90")
+# For all other files (lowercase .f90, .c, .cc, etc.):
+#   ("basename", "original_filename")
+sub fppized_info {
+    my ($file) = @_;
+    my ($base, $ext) = $file =~ /^(.*)(\.[^.]+)$/;
+    if (defined $ext && $ext =~ /^\.F(?:90|95|77)?$/) {
+        my $low = lc($ext);
+        return ("${base}.fppized", "${base}.fppized${low}");
+    } else {
+        return (defined $base ? $base : $file, $file);
     }
 }
 

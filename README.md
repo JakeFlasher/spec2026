@@ -1,6 +1,6 @@
 # SPEC CPU 2026 Build & Run Tool
 
-Prerequisites: obtain your own copy of SPEC CPU 2026, then copy the `benchspec/` folder into this directory.
+Prerequisites: obtain your own copy of SPEC CPU 2026, then copy the `benchspec/` and `bin/` folder into this directory.
 
 ## Usage
 
