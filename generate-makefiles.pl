@@ -181,7 +181,7 @@ sub generate_makefiles {
 
     # Default EXTRA_FFLAGS for Fortran benchmarks
     my $xfflags = $XFFLAGS;
-    if ($benchlang =~ /F/i && $xfflags !~ /fallow-argument-mismatch/) {
+    if ($benchlang =~ /F/i && $xfflags !~ /fallow-argument-mismatch/ && $FC !~ /flang-new/) {
         $xfflags = $xfflags ? "$xfflags -fallow-argument-mismatch" : "-fallow-argument-mismatch";
     }
 
