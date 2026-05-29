@@ -53,6 +53,7 @@ class Validation:
 class Workload:
     args: list  # command-line arguments (exe name prepended at runtime)
     stdout: Optional[str] = None  # where to redirect stdout, or None
+    stdin: Optional[str] = None  # stdin redirect from this file, or None
     validations: list = field(default_factory=list)
 
 
@@ -380,7 +381,6 @@ BENCH_WORKLOADS = {
     "710.omnetpp_r": [
         Workload(
             args=["-f", "randomMesh.ini", "-c", "General"],
-            stdout=None,
             validations=[
                 Validation(type="FILE", output="randomMesh-General-0.sca"),
                 Validation(type="FILE", output="randomMesh-General-1.sca"),
@@ -389,49 +389,40 @@ BENCH_WORKLOADS = {
         ),
         Workload(
             args=["-f", "queuenet.ini", "-c", "OneFifo"],
-            stdout=None,
             validations=[Validation(type="FILE", output="queuenet-OneFifo-0.sca")],
         ),
         Workload(
             args=["-f", "queuenet.ini", "-c", "TandemFifos"],
-            stdout=None,
             validations=[Validation(type="FILE", output="queuenet-TandemFifos-0.sca")],
         ),
         Workload(
             args=["-f", "queuenet.ini", "-c", "SmallCQN"],
-            stdout=None,
             validations=[Validation(type="FILE", output="queuenet-SmallCQN-0.sca")],
         ),
         Workload(
             args=["-f", "queuenet.ini", "-c", "Ring"],
-            stdout=None,
             validations=[Validation(type="FILE", output="queuenet-Ring-0.sca")],
         ),
         Workload(
             args=["-f", "queuenet.ini", "-c", "Terminal"],
-            stdout=None,
             validations=[Validation(type="FILE", output="queuenet-Terminal-0.sca")],
         ),
         Workload(
             args=["-f", "queuenet.ini", "-c", "CallCenter"],
-            stdout=None,
             validations=[Validation(type="FILE", output="queuenet-CallCenter-0.sca")],
         ),
         Workload(
             args=["-f", "queuenet.ini", "-c", "ForkJoin"],
-            stdout=None,
             validations=[Validation(type="FILE", output="queuenet-ForkJoin-0.sca")],
         ),
         Workload(
             args=["-f", "queuenet.ini", "-c", "ResourceAllocation"],
-            stdout=None,
             validations=[
                 Validation(type="FILE", output="queuenet-ResourceAllocation-0.sca")
             ],
         ),
         Workload(
             args=["-f", "queuenet.ini", "-c", "AllocDealloc"],
-            stdout=None,
             validations=[Validation(type="FILE", output="queuenet-AllocDealloc-0.sca")],
         ),
     ],
@@ -478,7 +469,6 @@ BENCH_WORKLOADS = {
     "721.gcc_r": [
         Workload(
             args=["gcc-pp.c", "-O2", "-fpic", "-o", "gcc-pp.c.opts-O2_-fpic.s"],
-            stdout=None,
             validations=[Validation(type="FILE", output="gcc-pp.c.opts-O2_-fpic.s")],
         ),
         Workload(
@@ -489,7 +479,6 @@ BENCH_WORKLOADS = {
                 "-o",
                 "gcc-smaller.c.opts-O3_-fipa-pta.s",
             ],
-            stdout=None,
             validations=[
                 Validation(type="FILE", output="gcc-smaller.c.opts-O3_-fipa-pta.s")
             ],
@@ -503,7 +492,6 @@ BENCH_WORKLOADS = {
                 "-o",
                 "ref32.c.opts-O3_-finline-limit_12000_-fno-tree-vrp.s",
             ],
-            stdout=None,
             validations=[
                 Validation(
                     type="FILE",
@@ -603,17 +591,14 @@ BENCH_WORKLOADS = {
         ),
         Workload(
             args=["-F", "beem6-fraig.in"],
-            stdout=None,
             validations=[Validation(type="BIN-FILE", output="beem6.out.aig")],
         ),
         Workload(
             args=["-F", "mem_ctrl.in"],
-            stdout=None,
             validations=[Validation(type="BIN-FILE", output="mem_ctrl.out.aig")],
         ),
         Workload(
             args=["-F", "vga_lcd_miter.in"],
-            stdout=None,
             validations=[Validation(type="BIN-FILE", output="vga_lcd_miter.out.aig")],
         ),
         Workload(
@@ -1025,7 +1010,6 @@ BENCH_WORKLOADS = {
                 "--max-ticks",
                 "10_000_000_000",
             ],
-            stdout=None,
             validations=[
                 Validation(
                     type="CMD",
@@ -1047,7 +1031,6 @@ BENCH_WORKLOADS = {
                 "--max-ticks",
                 "20_000_000_000",
             ],
-            stdout=None,
             validations=[
                 Validation(
                     type="CMD",
@@ -1067,7 +1050,6 @@ BENCH_WORKLOADS = {
                 "LinearGenerator",
                 "21",
             ],
-            stdout=None,
             validations=[
                 Validation(
                     type="CMD",
@@ -1088,7 +1070,6 @@ BENCH_WORKLOADS = {
                 "74",
                 "--ruby",
             ],
-            stdout=None,
             validations=[
                 Validation(
                     type="CMD",
@@ -1117,7 +1098,6 @@ BENCH_WORKLOADS = {
     "753.ns3_r": [
         Workload(
             args=["mobile-scenario", "--simTimeMinutes=3", "--RngSeed=1", "--RngRun=1"],
-            stdout=None,
             validations=[Validation(type="FILE", output="mobile-scenario.xml")],
         ),
         Workload(
@@ -1256,13 +1236,402 @@ BENCH_WORKLOADS = {
             ],
         ),
     ],
+    "709.cactus_r": [
+        Workload(
+            args=["ShiftedGaugeWave.par"],
+            stdout="cactus.out",
+            validations=[
+                Validation(type="FILE", output="cactus.out"),
+                Validation(type="FILE", output="gxx.dl"),
+                Validation(type="FILE", output="gxx.xl"),
+                Validation(type="FILE", output="gxx.yl"),
+                Validation(type="FILE", output="gxx.zl"),
+                Validation(type="FILE", output="gxy.dl"),
+                Validation(type="FILE", output="gxy.xl"),
+                Validation(type="FILE", output="gxy.yl"),
+                Validation(type="FILE", output="gxy.zl"),
+            ],
+        ),
+    ],
+    "722.palm_r": [
+        Workload(
+            args=[],
+            stdin="runfile_atmos",
+            validations=[Validation(type="FILE", output="RUN_CONTROL")],
+        ),
+    ],
+    "731.astcenc_r": [
+        Workload(
+            args=["ref-inputs-linear.txt"],
+            stdout="astcenc_r.0.out",
+            validations=[Validation(type="FILE", output="astcenc_r.0.out")],
+        ),
+        Workload(
+            args=["ref-inputs-hdr.txt"],
+            stdout="astcenc_r.1.out",
+            validations=[Validation(type="FILE", output="astcenc_r.1.out")],
+        ),
+        Workload(
+            args=["ref-inputs-precision.txt"],
+            stdout="astcenc_r.2.out",
+            validations=[Validation(type="FILE", output="astcenc_r.2.out")],
+        ),
+    ],
+    "736.ocio_r": [
+        Workload(
+            args=[
+                "--spec-validation-offset",
+                "101",
+                "--spec-validation-stride",
+                "17",
+                "--spec-validation-pixels",
+                "131",
+                "--bitdepths",
+                "ui16",
+                "ui16",
+                "--iter",
+                "100",
+                "--test",
+                "-1",
+                "--transform",
+                "ctf/lut1d_halfdom.ctf",
+            ],
+            stdout="perf_lut1d_halfdom.ctf.out",
+            validations=[Validation(type="FILE", output="perf_lut1d_halfdom.ctf.out")],
+        ),
+        Workload(
+            args=[
+                "--spec-validation-offset",
+                "202",
+                "--spec-validation-stride",
+                "19",
+                "--spec-validation-pixels",
+                "132",
+                "--bitdepths",
+                "ui16",
+                "f32",
+                "--iter",
+                "200",
+                "--8kres",
+                "--test",
+                "0",
+                "--transform",
+                "ctf/mntr_srgb_identity.ctf",
+            ],
+            stdout="perf_mntr_srgb_identity.ctf.out",
+            validations=[
+                Validation(type="FILE", output="perf_mntr_srgb_identity.ctf.out")
+            ],
+        ),
+        Workload(
+            args=[
+                "--spec-validation-offset",
+                "303",
+                "--spec-validation-stride",
+                "23",
+                "--spec-validation-pixels",
+                "133",
+                "--bitdepths",
+                "f32",
+                "f32",
+                "--iter",
+                "20",
+                "--8kres",
+                "--test",
+                "-1",
+                "--transform",
+                "clf/aces_to_video_with_look.clf",
+            ],
+            stdout="perf_aces_to_video_with_look.clf.out",
+            validations=[
+                Validation(type="FILE", output="perf_aces_to_video_with_look.clf.out")
+            ],
+        ),
+        Workload(
+            args=[
+                "--spec-validation-offset",
+                "404",
+                "--spec-validation-stride",
+                "29",
+                "--spec-validation-pixels",
+                "134",
+                "--bitdepths",
+                "f32",
+                "f32",
+                "--iter",
+                "25",
+                "--test",
+                "-1",
+                "--transform",
+                "clf/heavy_transform.clf",
+            ],
+            stdout="perf_heavy_transform.clf.out",
+            validations=[
+                Validation(type="FILE", output="perf_heavy_transform.clf.out")
+            ],
+        ),
+    ],
+    "737.gmsh_r": [
+        Workload(
+            args=["-option", "gmsh.opts", "-nt", "0", "choi.geo"],
+            validations=[Validation(type="FILE", output="choi.val")],
+        ),
+        Workload(
+            args=["-option", "gmsh.opts", "-nt", "0", "mediterranean.geo"],
+            validations=[Validation(type="FILE", output="mediterranean.val")],
+        ),
+        Workload(
+            args=["-option", "gmsh.opts", "-nt", "0", "projection.geo"],
+            validations=[Validation(type="FILE", output="projection.val")],
+        ),
+        Workload(
+            args=["-option", "gmsh.opts", "-nt", "0", "gasdis.geo"],
+            validations=[Validation(type="FILE", output="gasdis.val")],
+        ),
+        Workload(
+            args=["-option", "gmsh.opts", "-nt", "0", "Torus.geo"],
+            validations=[Validation(type="FILE", output="Torus.val")],
+        ),
+        Workload(
+            args=[
+                "-option",
+                "gmsh.opts",
+                "-nt",
+                "0",
+                "spec.geo",
+                "-clscale",
+                "0.175",
+                "-algo",
+                "del2d",
+                "-algo",
+                "hxt",
+            ],
+            validations=[Validation(type="FILE", output="spec.val")],
+        ),
+        Workload(
+            args=["-option", "gmsh.opts", "-nt", "0", "p19.geo"],
+            validations=[Validation(type="FILE", output="p19.val")],
+        ),
+    ],
+    "748.flightdm_r": [
+        Workload(
+            args=["--nohighlight", "scripts/weather-balloon2.xml"],
+            stdout="weather-balloon2.xml.out",
+            validations=[Validation(type="FILE", output="weather-balloon2.xml.out")],
+        ),
+        Workload(
+            args=["--nohighlight", "scripts/B747_script1.xml"],
+            stdout="B747_script1.xml.out",
+            validations=[Validation(type="FILE", output="B747_script1.xml.out")],
+        ),
+        Workload(
+            args=["--nohighlight", "scripts/x153.xml"],
+            stdout="x153.xml.out",
+            validations=[Validation(type="FILE", output="x153.xml.out")],
+        ),
+        Workload(
+            args=["--nohighlight", "scripts/c3104.xml"],
+            stdout="c3104.xml.out",
+            validations=[Validation(type="FILE", output="c3104.xml.out")],
+        ),
+        Workload(
+            args=["--nohighlight", "scripts/ah1s_flight_test.xml"],
+            stdout="ah1s_flight_test.xml.out",
+            validations=[Validation(type="FILE", output="ah1s_flight_test.xml.out")],
+        ),
+        Workload(
+            args=["--nohighlight", "scripts/ball_orbit_g_torque.xml"],
+            stdout="ball_orbit_g_torque.xml.out",
+            validations=[Validation(type="FILE", output="ball_orbit_g_torque.xml.out")],
+        ),
+        Workload(
+            args=["--nohighlight", "scripts/ball_orbit_g_torque2.xml"],
+            stdout="ball_orbit_g_torque2.xml.out",
+            validations=[
+                Validation(type="FILE", output="ball_orbit_g_torque2.xml.out")
+            ],
+        ),
+        Workload(
+            args=["--nohighlight", "scripts/ball_orbit.xml"],
+            stdout="ball_orbit.xml.out",
+            validations=[Validation(type="FILE", output="ball_orbit.xml.out")],
+        ),
+    ],
+    "749.fotonik3d_r": [
+        Workload(
+            args=[],
+            validations=[Validation(type="FILE", output="pscyee.out",abstol=1e-26,reltol=1e-07)],
+        ),
+    ],
+    "765.roms_r": [
+        Workload(
+            args=[],
+            stdin="roms_benchmark2.in.x",
+            stdout="roms_benchmark2.log",
+            validations=[Validation(type="FILE", output="roms_benchmark2.log")],
+        ),
+    ],
+    "766.femflow_r": [
+        Workload(
+            args=["refrate.prm"],
+            stdout="femflow.out",
+            validations=[Validation(type="FILE", output="femflow.out")],
+        ),
+    ],
+    "767.nest_r": [
+        Workload(
+            args=["cuba_stdp.sli"],
+            stdout="cuba_stdp.sli.out",
+            validations=[
+                Validation(type="FILE", output="cuba_stdp.sli.out"),
+                Validation(type="FILE", output="cuba_stdp-11253-0.dat"),
+                Validation(type="FILE", output="cuba_stdp-11254-0.dat"),
+            ],
+        ),
+        Workload(
+            args=["structural_plasticity_benchmark.sli"],
+            stdout="structural_plasticity_benchmark.sli.out",
+            validations=[
+                Validation(
+                    type="FILE", output="structural_plasticity_benchmark.sli.out"
+                ),
+                Validation(type="FILE", output="spb_log_00.dat"),
+                Validation(type="FILE", output="spike_recorder-6002-0.dat"),
+            ],
+        ),
+        Workload(
+            args=["ArtificialSynchrony.sli"],
+            stdout="ArtificialSynchrony.sli.out",
+            validations=[
+                Validation(type="FILE", output="ArtificialSynchrony.sli.out"),
+                Validation(type="FILE", output="voltmeter-Grid-0-129-0.dat"),
+                Validation(type="FILE", output="voltmeter-Grid-1-129-0.dat"),
+                Validation(type="FILE", output="voltmeter-Grid-2-129-0.dat"),
+                Validation(type="FILE", output="voltmeter-Grid-3-129-0.dat"),
+                Validation(type="FILE", output="voltmeter-Grid-4-129-0.dat"),
+                Validation(type="FILE", output="voltmeter-Grid-5-129-0.dat"),
+                Validation(type="FILE", output="voltmeter-Precise-0-129-0.dat"),
+                Validation(type="FILE", output="voltmeter-Precise-1-129-0.dat"),
+                Validation(type="FILE", output="voltmeter-Precise-2-129-0.dat"),
+                Validation(type="FILE", output="voltmeter-Precise-3-129-0.dat"),
+                Validation(type="FILE", output="voltmeter-Precise-4-129-0.dat"),
+                Validation(type="FILE", output="voltmeter-Precise-5-129-0.dat"),
+            ],
+        ),
+    ],
+    "772.marian_r": [
+        Workload(
+            args=[
+                "--cpu-threads",
+                "1",
+                "-m",
+                "model.alphas.npz",
+                "-v",
+                "vocab.spm",
+                "vocab.spm",
+                "--beam-size",
+                "1",
+                "--mini-batch",
+                "32",
+                "--maxi-batch",
+                "100",
+                "--maxi-batch-sort",
+                "src",
+                "-w",
+                "512",
+                "--skip-cost",
+                "--gemm-type",
+                "intgemm8",
+                "--intgemm-options",
+                "precomputed-alpha",
+                "standard-only",
+                "--quiet",
+                "--quiet-translation",
+                "-i",
+                "TildeMODEL-spec.en",
+                "--log",
+                "TildeMODEL-spec.log",
+                "--log-level",
+                "off",
+                "-o",
+                "TildeMODEL-spec.out",
+            ],
+            validations=[
+                Validation(
+                    type="CMD",
+                    output="compare_TildeMODEL-spec.out.out",
+                    cmd=[
+                        "./text_compare",
+                        "TildeMODEL-spec.out",
+                        "compare/TildeMODEL-spec.out"
+                    ],
+                ),
+            ],
+        ),
+        Workload(
+            args=[
+                "--cpu-threads",
+                "1",
+                "-m",
+                "model.alphas.npz",
+                "-v",
+                "vocab.spm",
+                "vocab.spm",
+                "--beam-size",
+                "1",
+                "--mini-batch",
+                "32",
+                "--maxi-batch",
+                "100",
+                "--maxi-batch-sort",
+                "src",
+                "-w",
+                "512",
+                "--skip-cost",
+                "--gemm-type",
+                "intgemm8",
+                "--intgemm-options",
+                "precomputed-alpha",
+                "standard-only",
+                "--quiet",
+                "--quiet-translation",
+                "-i",
+                "EuroPat-spec.en",
+                "--log",
+                "EuroPat-spec.log",
+                "--log-level",
+                "off",
+                "-o",
+                "EuroPat-spec.out",
+            ],
+            stdout="run_EuroPat-spec.out.out",
+            validations=[
+                Validation(
+                    type="CMD",
+                    output="compare_EuroPat-spec.out.out",
+                    cmd=[
+                        "./text_compare",
+                        "EuroPat-spec.out",
+                        "compare/EuroPat-spec.out"
+                    ],
+                ),
+            ],
+        ),
+    ],
+    "782.lbm_r": [
+        Workload(
+            args=["900", "reference.dat", "0", "0", "200_200_130_ldc.of"],
+            stdout="lbm.out",
+            validations=[Validation(type="FILE", output="lbm.out")],
+        ),
+    ],
 }
 
 # Benchmarks whose input files must be copied (not symlinked) into the run directory.
 COPY_INPUTS = {"735.gem5_r", "777.zstd_r"}
 
 # Benchmarks whose .xz files must be decompressed before running.
-DECOMPRESS_XZ = {"734.vpr_r", "735.gem5_r"}
+DECOMPRESS_XZ = {"734.vpr_r", "735.gem5_r", "749.fotonik3d_r"}
 
 
 def link_inputs(src_dir, dst_dir, copy=False, decompress_xz=False):
@@ -1322,7 +1691,7 @@ def setup_run_dir(
     return run_dir
 
 
-def compare_output(run_dir, ref_dir, fname, binary=False):
+def compare_output(run_dir, ref_dir, fname, binary=False, abstol=None, reltol=None):
     ref_file = os.path.join(ref_dir, fname)
     if not os.path.exists(ref_file):
         return "no reference"
@@ -1347,9 +1716,36 @@ def compare_output(run_dir, ref_dir, fname, binary=False):
     if len(out_lines) != len(ref_lines):
         return f"line count mismatch ({len(out_lines)} vs {len(ref_lines)})"
 
+    float_re = re.compile(r"[-+]?(?:\d+\.?\d*|\.\d+)(?:[eE][-+]?\d+)?")
+
+    def extract_floats(s):
+        return [float(m.group()) for m in float_re.finditer(s)]
+
     diffs = 0
+    use_tol = abstol is not None or reltol is not None
     for i, (a, b) in enumerate(zip(out_lines, ref_lines)):
-        if a.strip() != b.strip():
+        a_s, b_s = a.strip(), b.strip()
+        if use_tol:
+            fa, fb = extract_floats(a_s), extract_floats(b_s)
+            if fa and fb and len(fa) == len(fb):
+                # compare non-numeric text parts
+                text_a = float_re.sub("<>", a_s)
+                text_b = float_re.sub("<>", b_s)
+                if text_a != text_b:
+                    diffs += 1
+                    continue
+                for va, vb in zip(fa, fb):
+                    abs_diff = abs(va - vb)
+                    if abs_diff <= (abstol if abstol is not None else 0):
+                        continue
+                    if reltol is not None:
+                        denom = max(abs(va), abs(vb), 1e-300)
+                        if abs_diff / denom <= reltol:
+                            continue
+                    diffs += 1
+                    break
+                continue
+        if a_s != b_s:
             diffs += 1
 
     if diffs == 0:
@@ -1516,7 +1912,16 @@ def cmd_run(args):
                     cmd = perf_cmd + cmd
                 cmd = prefix + cmd
                 start = time.monotonic()
-                result = subprocess.run(cmd, cwd=run_dir, capture_output=True)
+                stdin_file = None
+                stdin_handle = None
+                if wl.stdin:
+                    stdin_handle = open(os.path.join(run_dir, wl.stdin), "rb")
+                    stdin_file = stdin_handle
+                result = subprocess.run(
+                    cmd, cwd=run_dir, capture_output=True, stdin=stdin_file
+                )
+                if stdin_handle:
+                    stdin_handle.close()
                 elapsed = time.monotonic() - start
                 copy_times.append(elapsed)
 
@@ -1597,6 +2002,8 @@ def cmd_run(args):
                             ref_dir,
                             val.output,
                             binary=(val.type == "BIN-FILE"),
+                            abstol=val.abstol,
+                            reltol=val.reltol,
                         )
                         if r == "pass":
                             print(f"  VALIDATE {val.output}: pass", flush=True)
