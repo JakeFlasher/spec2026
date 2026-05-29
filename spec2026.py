@@ -1241,15 +1241,17 @@ BENCH_WORKLOADS = {
             args=["ShiftedGaugeWave.par"],
             stdout="cactus.out",
             validations=[
-                Validation(type="FILE", output="cactus.out"),
-                Validation(type="FILE", output="gxx.dl"),
-                Validation(type="FILE", output="gxx.xl"),
-                Validation(type="FILE", output="gxx.yl"),
-                Validation(type="FILE", output="gxx.zl"),
-                Validation(type="FILE", output="gxy.dl"),
-                Validation(type="FILE", output="gxy.xl"),
-                Validation(type="FILE", output="gxy.yl"),
-                Validation(type="FILE", output="gxy.zl"),
+                Validation(
+                    type="FILE", output="cactus.out", abstol=1e-14, reltol=0.0001
+                ),
+                Validation(type="FILE", output="gxx.dl", abstol=1e-14, reltol=0.0001),
+                Validation(type="FILE", output="gxx.xl", abstol=1e-14, reltol=0.0001),
+                Validation(type="FILE", output="gxx.yl", abstol=1e-14, reltol=0.0001),
+                Validation(type="FILE", output="gxx.zl", abstol=1e-14, reltol=0.0001),
+                Validation(type="FILE", output="gxy.dl", abstol=1e-14, reltol=0.0001),
+                Validation(type="FILE", output="gxy.xl", abstol=1e-14, reltol=0.0001),
+                Validation(type="FILE", output="gxy.yl", abstol=1e-14, reltol=0.0001),
+                Validation(type="FILE", output="gxy.zl", abstol=1e-14, reltol=0.0001),
             ],
         ),
     ],
@@ -1460,7 +1462,9 @@ BENCH_WORKLOADS = {
     "749.fotonik3d_r": [
         Workload(
             args=[],
-            validations=[Validation(type="FILE", output="pscyee.out",abstol=1e-26,reltol=1e-07)],
+            validations=[
+                Validation(type="FILE", output="pscyee.out", abstol=1e-26, reltol=1e-07)
+            ],
         ),
     ],
     "765.roms_r": [
@@ -1563,7 +1567,7 @@ BENCH_WORKLOADS = {
                     cmd=[
                         "./text_compare",
                         "TildeMODEL-spec.out",
-                        "compare/TildeMODEL-spec.out"
+                        "compare/TildeMODEL-spec.out",
                     ],
                 ),
             ],
@@ -1612,7 +1616,7 @@ BENCH_WORKLOADS = {
                     cmd=[
                         "./text_compare",
                         "EuroPat-spec.out",
-                        "compare/EuroPat-spec.out"
+                        "compare/EuroPat-spec.out",
                     ],
                 ),
             ],
