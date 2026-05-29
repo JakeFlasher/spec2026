@@ -40,4 +40,5 @@ Prerequisites: obtain your own copy of SPEC CPU 2026, then copy the `benchspec/`
 --input-size <size>  Input data: refrate, refspeed, test, train (default: refrate)
 --taskset-core <n>   Pin first copy to this CPU via taskset
 --perf-record        Wrap with perf record
+--perf-stat          Wrap with perf stat
 ```
