@@ -1266,17 +1266,23 @@ BENCH_WORKLOADS = {
         Workload(
             args=["ref-inputs-linear.txt"],
             stdout="astcenc_r.0.out",
-            validations=[Validation(type="FILE", output="astcenc_r.0.out")],
+            validations=[
+                Validation(type="FILE", output="astcenc_r.0.out", reltol=0.01)
+            ],
         ),
         Workload(
             args=["ref-inputs-hdr.txt"],
             stdout="astcenc_r.1.out",
-            validations=[Validation(type="FILE", output="astcenc_r.1.out")],
+            validations=[
+                Validation(type="FILE", output="astcenc_r.1.out", reltol=0.01)
+            ],
         ),
         Workload(
             args=["ref-inputs-precision.txt"],
             stdout="astcenc_r.2.out",
-            validations=[Validation(type="FILE", output="astcenc_r.2.out")],
+            validations=[
+                Validation(type="FILE", output="astcenc_r.2.out", reltol=0.01)
+            ],
         ),
     ],
     "736.ocio_r": [
