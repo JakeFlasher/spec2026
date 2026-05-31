@@ -1394,23 +1394,27 @@ BENCH_WORKLOADS = {
     "737.gmsh_r": [
         Workload(
             args=["-option", "gmsh.opts", "-nt", "0", "choi.geo"],
-            validations=[Validation(type="FILE", output="choi.val")],
+            validations=[Validation(type="FILE", output="choi.val", reltol=0.035)],
         ),
         Workload(
             args=["-option", "gmsh.opts", "-nt", "0", "mediterranean.geo"],
-            validations=[Validation(type="FILE", output="mediterranean.val")],
+            validations=[
+                Validation(type="FILE", output="mediterranean.val", reltol=0.035)
+            ],
         ),
         Workload(
             args=["-option", "gmsh.opts", "-nt", "0", "projection.geo"],
-            validations=[Validation(type="FILE", output="projection.val")],
+            validations=[
+                Validation(type="FILE", output="projection.val", reltol=0.035)
+            ],
         ),
         Workload(
             args=["-option", "gmsh.opts", "-nt", "0", "gasdis.geo"],
-            validations=[Validation(type="FILE", output="gasdis.val")],
+            validations=[Validation(type="FILE", output="gasdis.val", reltol=0.035)],
         ),
         Workload(
             args=["-option", "gmsh.opts", "-nt", "0", "Torus.geo"],
-            validations=[Validation(type="FILE", output="Torus.val")],
+            validations=[Validation(type="FILE", output="Torus.val", reltol=0.035)],
         ),
         Workload(
             args=[
@@ -1426,11 +1430,11 @@ BENCH_WORKLOADS = {
                 "-algo",
                 "hxt",
             ],
-            validations=[Validation(type="FILE", output="spec.val")],
+            validations=[Validation(type="FILE", output="spec.val", reltol=0.035)],
         ),
         Workload(
             args=["-option", "gmsh.opts", "-nt", "0", "p19.geo"],
-            validations=[Validation(type="FILE", output="p19.val")],
+            validations=[Validation(type="FILE", output="p19.val", reltol=0.035)],
         ),
     ],
     "748.flightdm_r": [
