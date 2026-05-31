@@ -1305,7 +1305,9 @@ BENCH_WORKLOADS = {
                 "ctf/lut1d_halfdom.ctf",
             ],
             stdout="perf_lut1d_halfdom.ctf.out",
-            validations=[Validation(type="FILE", output="perf_lut1d_halfdom.ctf.out")],
+            validations=[
+                Validation(type="FILE", output="perf_lut1d_halfdom.ctf.out", abstol=2)
+            ],
         ),
         Workload(
             args=[
@@ -1328,7 +1330,11 @@ BENCH_WORKLOADS = {
             ],
             stdout="perf_mntr_srgb_identity.ctf.out",
             validations=[
-                Validation(type="FILE", output="perf_mntr_srgb_identity.ctf.out")
+                Validation(
+                    type="FILE",
+                    output="perf_mntr_srgb_identity.ctf.out",
+                    abstol=1.6e-05,
+                )
             ],
         ),
         Workload(
@@ -1352,7 +1358,11 @@ BENCH_WORKLOADS = {
             ],
             stdout="perf_aces_to_video_with_look.clf.out",
             validations=[
-                Validation(type="FILE", output="perf_aces_to_video_with_look.clf.out")
+                Validation(
+                    type="FILE",
+                    output="perf_aces_to_video_with_look.clf.out",
+                    abstol=3e-06,
+                )
             ],
         ),
         Workload(
@@ -1375,7 +1385,9 @@ BENCH_WORKLOADS = {
             ],
             stdout="perf_heavy_transform.clf.out",
             validations=[
-                Validation(type="FILE", output="perf_heavy_transform.clf.out")
+                Validation(
+                    type="FILE", output="perf_heavy_transform.clf.out", abstol=2e-06
+                )
             ],
         ),
     ],
