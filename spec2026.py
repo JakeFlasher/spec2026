@@ -152,7 +152,7 @@ def do_build(bench_ids, suite, config_tag, args):
     env = os.environ.copy()
     env["SPEC"] = ROOT
     env["OUTPUT_DIR"] = root
-    env["CC"] = args.cc + " -std=c19"
+    env["CC"] = args.cc + " -std=c18"
     env["CXX"] = args.cxx + " --std=c++17"
     env["FC"] = args.fc + " -std=f2018"
     env["COPT"] = args.opt
