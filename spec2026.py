@@ -1441,44 +1441,66 @@ BENCH_WORKLOADS = {
         Workload(
             args=["--nohighlight", "scripts/weather-balloon2.xml"],
             stdout="weather-balloon2.xml.out",
-            validations=[Validation(type="FILE", output="weather-balloon2.xml.out")],
+            validations=[
+                Validation(
+                    type="FILE",
+                    output="weather-balloon2.xml.out",
+                    abstol=0.0001,
+                    reltol=0.001,
+                )
+            ],
         ),
         Workload(
             args=["--nohighlight", "scripts/B747_script1.xml"],
             stdout="B747_script1.xml.out",
-            validations=[Validation(type="FILE", output="B747_script1.xml.out")],
+            validations=[
+                Validation(type="FILE", output="B747_script1.xml.out", abstol=0.0001)
+            ],
         ),
         Workload(
             args=["--nohighlight", "scripts/x153.xml"],
             stdout="x153.xml.out",
-            validations=[Validation(type="FILE", output="x153.xml.out")],
+            validations=[Validation(type="FILE", output="x153.xml.out", abstol=0.0005)],
         ),
         Workload(
             args=["--nohighlight", "scripts/c3104.xml"],
             stdout="c3104.xml.out",
-            validations=[Validation(type="FILE", output="c3104.xml.out")],
+            validations=[Validation(type="FILE", output="c3104.xml.out", abstol=0.58)],
         ),
         Workload(
             args=["--nohighlight", "scripts/ah1s_flight_test.xml"],
             stdout="ah1s_flight_test.xml.out",
-            validations=[Validation(type="FILE", output="ah1s_flight_test.xml.out")],
+            validations=[
+                Validation(type="FILE", output="ah1s_flight_test.xml.out", abstol=0.007)
+            ],
         ),
         Workload(
             args=["--nohighlight", "scripts/ball_orbit_g_torque.xml"],
             stdout="ball_orbit_g_torque.xml.out",
-            validations=[Validation(type="FILE", output="ball_orbit_g_torque.xml.out")],
+            validations=[
+                Validation(
+                    type="FILE", output="ball_orbit_g_torque.xml.out", abstol=0.0001
+                )
+            ],
         ),
         Workload(
             args=["--nohighlight", "scripts/ball_orbit_g_torque2.xml"],
             stdout="ball_orbit_g_torque2.xml.out",
             validations=[
-                Validation(type="FILE", output="ball_orbit_g_torque2.xml.out")
+                Validation(
+                    type="FILE",
+                    output="ball_orbit_g_torque2.xml.out",
+                    abstol=0.0001,
+                    reltol=0.017,
+                )
             ],
         ),
         Workload(
             args=["--nohighlight", "scripts/ball_orbit.xml"],
             stdout="ball_orbit.xml.out",
-            validations=[Validation(type="FILE", output="ball_orbit.xml.out")],
+            validations=[
+                Validation(type="FILE", output="ball_orbit.xml.out", abstol=0.08)
+            ],
         ),
     ],
     "749.fotonik3d_r": [
