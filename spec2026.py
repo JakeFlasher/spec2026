@@ -1937,6 +1937,10 @@ def cmd_run(args):
                         perf_cmd += ["-M", args.perf_stat_metrics]
                     cmd = perf_cmd + cmd
                 cmd = prefix + cmd
+                for val in wl.validations:
+                    p = os.path.join(run_dir, val.output)
+                    if os.path.exists(p):
+                        os.remove(p)
                 start = time.monotonic()
                 stdin_file = None
                 stdin_handle = None
