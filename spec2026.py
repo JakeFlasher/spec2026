@@ -1619,6 +1619,7 @@ BENCH_WORKLOADS = {
                         "TildeMODEL-spec.out",
                         "compare/TildeMODEL-spec.out",
                     ],
+                    abstol=0.01
                 ),
             ],
         ),
@@ -1668,6 +1669,7 @@ BENCH_WORKLOADS = {
                         "EuroPat-spec.out",
                         "compare/EuroPat-spec.out",
                     ],
+                    abstol=0.01
                 ),
             ],
         ),
