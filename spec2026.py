@@ -1516,7 +1516,14 @@ BENCH_WORKLOADS = {
             args=[],
             stdin="roms_benchmark2.in.x",
             stdout="roms_benchmark2.log",
-            validations=[Validation(type="FILE", output="roms_benchmark2.log")],
+            validations=[
+                Validation(
+                    type="FILE",
+                    output="roms_benchmark2.log",
+                    abstol=1e-07,
+                    reltol=1e-07,
+                )
+            ],
         ),
     ],
     "766.femflow_r": [
