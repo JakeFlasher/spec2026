@@ -12,16 +12,15 @@ Usage:
 """
 
 import argparse
-import glob as globmod
 import json
 import lzma
 import os
 import re
-import shlex
 import shutil
 import subprocess
 import sys
 import time
+import resource
 from dataclasses import dataclass, field
 from typing import Optional
 
@@ -2215,6 +2214,11 @@ def cmd_list_configs(args):
 
 
 def main():
+    # ulimit -s unlimited
+    resource.setrlimit(
+        resource.RLIMIT_STACK, (resource.RLIM_INFINITY, resource.RLIM_INFINITY)
+    )
+
     p = argparse.ArgumentParser(description="SPEC CPU 2026 build and run tool")
     sub = p.add_subparsers(dest="command", required=True)
 
