@@ -1960,7 +1960,7 @@ def cmd_run(args):
                         perf_cmd += ["-e", args.perf_record]
                     cmd = perf_cmd + cmd
                 if args.perf_stat is not None or args.perf_stat_metrics is not None:
-                    perf_cmd = ["perf", "stat", "-o", f"{perf_name}.stat"]
+                    perf_cmd = ["perf", "stat", "--append", "-o", f"{perf_name}.stat"]
                     if args.perf_stat:
                         perf_cmd += ["-e", args.perf_stat]
                     if args.perf_stat_metrics:
